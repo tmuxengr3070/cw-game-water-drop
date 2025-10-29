@@ -15,7 +15,7 @@ const modeBtn = document.getElementById("mode-btn");
 const modeDropdown = document.getElementById("mode-dropdown");
 modeBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  modeDropdown.style.display = modeDropdown.style.display === "block" ? "none" : "block";
+  modeDropdown.classList.toggle("show");
 });
 document.querySelectorAll(".mode-option").forEach(opt => {
   opt.addEventListener("click", (e) => {
@@ -35,14 +35,14 @@ document.querySelectorAll(".mode-option").forEach(opt => {
       winScore = 27;
     }
     updateTimer();
-    modeDropdown.style.display = "none";
+    modeDropdown.classList.remove("show");
     modeBtn.textContent = `Mode (${mode.charAt(0).toUpperCase() + mode.slice(1)}) ▼`;
   });
 });
 // Hide dropdown if clicking outside
 document.addEventListener("click", (e) => {
   if (!modeBtn.contains(e.target) && !modeDropdown.contains(e.target)) {
-    modeDropdown.style.display = "none";
+    modeDropdown.classList.remove("show");
   }
 });
 
