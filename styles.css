@@ -110,6 +110,20 @@ body {
     background-color: #77A8BB;
 }
 
+#charitywater-btn {
+    padding: 8px 16px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#charitywater-btn:hover {
+    background-color: #77A8BB;
+
+
 .score {
     flex: 0 1 auto;  /* Don't grow, can shrink, auto basis */
     font-size: 24px;
