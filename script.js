@@ -1,28 +1,76 @@
 // Variables to control game state
-let gameRunning = false; // Keeps track of whether game is active or not
-let dropMaker; // Will store our timer that creates drops regularly
+let gameRunning = false;
+let dropMaker;
 let score = 0;
 let timer = 30;
 let timerInterval;
+
+// Mode state
+let mode = "normal"; // default mode
+let dropSpeed = "4s"; // default drop speed
+let winScore = 22; // default win score
+
+// Mode button/dropdown logic
+const modeBtn = document.getElementById("mode-btn");
+const modeDropdown = document.getElementById("mode-dropdown");
+modeBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  modeDropdown.style.display = modeDropdown.style.display === "block" ? "none" : "block";
+});
+document.querySelectorAll(".mode-option").forEach(opt => {
+  opt.addEventListener("click", (e) => {
+    mode = e.target.getAttribute("data-mode");
+    // Set timer, drop speed, win score based on mode
+    if (mode === "easy") {
+      timer = 45;
+      dropSpeed = "6s";
+      winScore = 22;
+    } else if (mode === "normal") {
+      timer = 35;
+      dropSpeed = "5s";
+      winScore = 25;
+    } else if (mode === "hard") {
+      timer = 30;
+      dropSpeed = "4s";
+      winScore = 27;
+    }
+    updateTimer();
+    modeDropdown.style.display = "none";
+    modeBtn.textContent = `Mode (${mode.charAt(0).toUpperCase() + mode.slice(1)}) ▼`;
+  });
+});
+// Hide dropdown if clicking outside
+document.addEventListener("click", (e) => {
+  if (!modeBtn.contains(e.target) && !modeDropdown.contains(e.target)) {
+    modeDropdown.style.display = "none";
+  }
+});
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
 
 function startGame() {
-  // Prevent multiple games from running at once
   if (gameRunning) return;
-
   gameRunning = true;
-
-  // Reset score at game start
   score = 0;
   updateScore();
 
-  // Reset and display timer
-  timer = 30;
+  // Set timer and winScore based on mode
+  if (mode === "easy") {
+    timer = 45;
+    dropSpeed = "6s";
+    winScore = 22;
+  } else if (mode === "normal") {
+    timer = 35;
+    dropSpeed = "5s";
+    winScore = 25;
+  } else if (mode === "hard") {
+    timer = 30;
+    dropSpeed = "4s";
+    winScore = 27;
+  }
   updateTimer();
 
-  // Start countdown timer
   timerInterval = setInterval(() => {
     timer -= 1;
     updateTimer();
@@ -31,10 +79,8 @@ function startGame() {
     }
   }, 1000);
 
-  // Create new drops every second (1000 milliseconds)
   dropMaker = setInterval(createDrop, 1000);
 
-  // Hide end message if present
   const messageElem = document.getElementById("end-message");
   if (messageElem) messageElem.style.display = "none";
 }
@@ -47,8 +93,11 @@ function updateScore() {
 
 // Add this function to update timer display
 function updateTimer() {
+  // Update both .timer and #time for compatibility
   const timerElem = document.querySelector(".timer");
-  if (timerElem) timerElem.textContent = timer;
+  if (timerElem) timerElem.textContent = `Time: ${timer}s`;
+  const timeElem = document.getElementById("time");
+  if (timeElem) timeElem.textContent = timer;
 }
 
 // End the game when timer reaches 0
@@ -80,12 +129,12 @@ function showEndMessage() {
     messageElem.style.padding = "16px";
     container.appendChild(messageElem);
   }
-  if (score >= 20) {
+  if (score >= winScore) {
     messageElem.textContent = "Congratulations! You win!";
     messageElem.style.color = "#2E9DF7";
     showConfetti("good");
   } else {
-    messageElem.textContent = "Try again! Score 20 or more to win.";
+    messageElem.textContent = "Try again! Score 30 or more to win.";
     messageElem.style.color = "#FFC907";
     showConfetti("bad");
   }
@@ -125,35 +174,23 @@ function showConfetti(type) {
 }
 
 function createDrop() {
-  // Create a new div element that will be our water drop
   const drop = document.createElement("div");
   drop.className = "water-drop";
-
-  // All drops start as solid color #003366
   drop.style.background = "radial-gradient(ellipse at center 60%, #003366 60%, #77A8BB 100%)";
-
-  // Randomly assign drop type: good or bad
-  const isGood = Math.random() < 0.5; // 50% chance
-
-  // Make drops different sizes for visual variety
+  const isGood = Math.random() < 0.5;
   const initialSize = 60;
   const sizeMultiplier = Math.random() * 0.8 + 0.5;
   const size = initialSize * sizeMultiplier;
   drop.style.width = drop.style.height = `${size}px`;
-
-  // Position the drop randomly across the game width
-  // Subtract 60 pixels to keep drops fully inside the container
   const gameWidth = document.getElementById("game-container").offsetWidth;
   const xPosition = Math.random() * (gameWidth - 60);
   drop.style.left = xPosition + "px";
 
-  // Make drops fall for 4 seconds
-  drop.style.animationDuration = "4s";
+  // Set drop speed based on mode
+  drop.style.animationDuration = dropSpeed;
 
-  // Add the new drop to the game screen
   document.getElementById("game-container").appendChild(drop);
 
-  // Score logic for clicking drops
   drop.addEventListener("click", () => {
     if (isGood) {
       drop.style.background = "radial-gradient(ellipse at center 60%, #FFC907 60%, #FFF7D6 100%)";
@@ -168,9 +205,8 @@ function createDrop() {
     setTimeout(() => drop.remove(), 200);
   });
 
-  // Remove drops that reach the bottom (weren't clicked)
   drop.addEventListener("animationend", () => {
-    drop.remove(); // Clean up drops that weren't caught
+    drop.remove();
   });
 }
 
@@ -178,21 +214,14 @@ function createDrop() {
 document.getElementById("restart-btn").addEventListener("click", restartGame);
 
 function restartGame() {
-  // Stop any running intervals
   clearInterval(dropMaker);
   clearInterval(timerInterval);
   gameRunning = false;
-
-  // Remove all drops
   const container = document.getElementById("game-container");
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
-
-  // Hide end message if present
   const messageElem = document.getElementById("end-message");
   if (messageElem) messageElem.style.display = "none";
-
-  // Start a new game
   startGame();
 }
