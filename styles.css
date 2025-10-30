@@ -110,6 +110,9 @@ body {
     background-color: #77A8BB;
 }
 
+.mode-dropdown-list { display: none; }
+.mode-dropdown-list.show { display: block; }
+
 #charitywater-btn {
     padding: 8px 16px;
     background-color: #003366;

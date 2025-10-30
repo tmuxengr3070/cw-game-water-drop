@@ -38,13 +38,11 @@ document.querySelectorAll(".mode-option").forEach(opt => {
     modeDropdown.classList.remove("show");
     modeBtn.textContent = `Mode (${mode.charAt(0).toUpperCase() + mode.slice(1)}) ▼`;
   });
-});
-// Hide dropdown if clicking outside
-document.addEventListener("click", (e) => {
-  if (!modeBtn.contains(e.target) && !modeDropdown.contains(e.target)) {
-    modeDropdown.classList.remove("show");
-  }
-});
+
+
+
+
+  
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
