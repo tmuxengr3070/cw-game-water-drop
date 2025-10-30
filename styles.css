@@ -113,6 +113,14 @@ body {
 .mode-dropdown-list { display: none; }
 .mode-dropdown-list.show { display: block; }
 
+.button-group {
+    position: relative;
+    display: flex;
+    margin-left: 10px;
+    flex-direction: row;
+    gap: 12px; /* Add even spacing between all buttons */
+} 
+
 #charitywater-btn {
     padding: 8px 16px;
     background-color: #003366;

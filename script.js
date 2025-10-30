@@ -15,7 +15,7 @@ const modeBtn = document.getElementById("mode-btn");
 const modeDropdown = document.getElementById("mode-dropdown");
 modeBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  modeDropdown.classList.toggle("show");
+  modeDropdown.classList.add("show");
 });
 document.querySelectorAll(".mode-option").forEach(opt => {
   opt.addEventListener("click", (e) => {
