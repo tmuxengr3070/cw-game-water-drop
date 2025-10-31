@@ -199,8 +199,8 @@ function createDrop() {
   const gameHeight = gameContainer.offsetHeight;
 
   // Start and end X positions for linear movement
-  const minX = -size / 2;
-  const maxX = gameWidth - size / 2;
+  const minX = 0;
+  const maxX = gameWidth - size;
   const startX = Math.random() * (maxX - minX) + minX;
   const endX = Math.random() * (maxX - minX) + minX;
 
