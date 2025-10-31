@@ -38,10 +38,25 @@ document.querySelectorAll(".mode-option").forEach(opt => {
     modeDropdown.classList.remove("show");
     modeBtn.textContent = `Mode (${mode.charAt(0).toUpperCase() + mode.slice(1)}) ▼`;
   });
+}); // <-- FIX: add this closing bracket
+
+// Add event listener to close dropdown when clicking outside
+document.addEventListener("click", (e) => {
+  if (!modeDropdown.contains(e.target) && e.target !== modeBtn) {
+    modeDropdown.classList.remove("show");
+  }
+});
 
 // Wait for button click to start the game
-document.getElementById("start-btn").onclick = startGame;
-document.getElementById("restart-btn").onclick = restartGame;
+document.getElementById("start-btn").onclick = function(e) {
+  e.preventDefault();
+  startGame();
+};
+
+document.getElementById("restart-btn").onclick = function(e) {
+  e.preventDefault();
+  restartGame();
+};
 
 function startGame() {
   if (gameRunning) return;
@@ -170,37 +185,54 @@ function showConfetti(type) {
 function createDrop() {
   const drop = document.createElement("div");
   drop.className = "water-drop";
-  drop.style.background = "radial-gradient(ellipse at center 60%, #003366 60%, #77A8BB 100%)";
+  // Use SVG background for realistic water drop shape
+  drop.style.background = `url('data:image/svg+xml;utf8,<svg width="60" height="80" xmlns="http://www.w3.org/2000/svg"><path d="M30 5 Q55 40 30 75 Q5 40 30 5 Z" fill="%232E9DF7" stroke="none"/></svg>') no-repeat center/contain`;
+
   const isGood = Math.random() < 0.5;
   const initialSize = 60;
   const sizeMultiplier = Math.random() * 0.8 + 0.5;
   const size = initialSize * sizeMultiplier;
   drop.style.width = drop.style.height = `${size}px`;
-  const gameWidth = document.getElementById("game-container").offsetWidth;
-  const xPosition = Math.random() * (gameWidth - 60);
-  drop.style.left = xPosition + "px";
 
-  // Set drop speed based on mode
-  drop.style.animationDuration = dropSpeed;
+  const gameContainer = document.getElementById("game-container");
+  const gameWidth = gameContainer.offsetWidth;
+  const gameHeight = gameContainer.offsetHeight;
 
-  document.getElementById("game-container").appendChild(drop);
+  // Start and end X positions for linear movement
+  const minX = -size / 2;
+  const maxX = gameWidth - size / 2;
+  const startX = Math.random() * (maxX - minX) + minX;
+  const endX = Math.random() * (maxX - minX) + minX;
+
+  drop.style.left = startX + "px";
+  drop.style.top = "0px";
+
+  // Animate drop falling linearly from startX to endX
+  drop.animate([
+    { transform: `translate(0px, -20px)` },
+    { transform: `translate(${endX - startX}px, ${gameHeight + 20}px)` }
+  ], {
+    duration: parseFloat(dropSpeed) * 1000,
+    easing: "linear",
+    fill: "forwards"
+  });
+
+  setTimeout(() => drop.remove(), parseFloat(dropSpeed) * 1000);
+
+  gameContainer.appendChild(drop);
 
   drop.addEventListener("click", () => {
     if (isGood) {
-      drop.style.background = "radial-gradient(ellipse at center 60%, #FFC907 60%, #FFF7D6 100%)";
+      drop.style.background = `url('data:image/svg+xml;utf8,<svg width="60" height="80" xmlns="http://www.w3.org/2000/svg"><path d="M30 5 Q55 40 30 75 Q5 40 30 5 Z" fill="%23FFC907" stroke="none"/></svg>') no-repeat center/contain`;
       score += 1;
       document.getElementById("good-sound").play();
     } else {
-      drop.style.background = "radial-gradient(ellipse at center 60%, #BF6C46 60%, #FFD6C1 100%)";
+      drop.style.background = `url('data:image/svg+xml;utf8,<svg width="60" height="80" xmlns="http://www.w3.org/2000/svg"><path d="M30 5 Q55 40 30 75 Q5 40 30 5 Z" fill="%23F5402C" stroke="none"/></svg>') no-repeat center/contain`;
       score -= 1;
       document.getElementById("bad-sound").play();
     }
     updateScore();
     setTimeout(() => drop.remove(), 200);
-  });
-
-  drop.addEventListener("animationend", () => {
-    drop.remove();
   });
 }
 

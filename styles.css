@@ -111,7 +111,19 @@ body {
 }
 
 .mode-dropdown-list { display: none; }
-.mode-dropdown-list { display: block; }
+
+
+.mode-dropdown-list.show {
+    display: block;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
 
 
 .button-group {
@@ -142,26 +154,7 @@ body {
     font-weight: bold;
 }
 
-.water-drop {
-    position: absolute;
-    width: 60px;
-    height: 80px;
-    /* Water drop shape using clip-path */
-    clip-path: path('M30 0 Q60 40 30 80 Q0 40 30 0 Z');
-    background-color: #003366;
-    animation: dropFall linear forwards;
-    transform-origin: center;
-    cursor: pointer;
-    transition: transform 0.1s ease;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    /* Remove padding/margin for shape accuracy */
-    padding: 0;
-    margin: 0;
-}
 
-.water-drop:hover {
-    transform: scale(1.1);  /* Slight grow effect on hover */
-}
 
 .bad-drop {
     background-color: #ff4444;
