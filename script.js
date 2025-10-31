@@ -15,7 +15,7 @@ const modeBtn = document.getElementById("mode-btn");
 const modeDropdown = document.getElementById("mode-dropdown");
 modeBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  modeDropdown.classList.toggle("show");
+  modeDropdown.classList.add("show");
 });
 document.querySelectorAll(".mode-option").forEach(opt => {
   opt.addEventListener("click", (e) => {
@@ -40,7 +40,8 @@ document.querySelectorAll(".mode-option").forEach(opt => {
   });
 
 // Wait for button click to start the game
-document.getElementById("start-btn").addEventListener("click", startGame);
+document.getElementById("start-btn").onclick = startGame;
+document.getElementById("restart-btn").onclick = restartGame;
 
 function startGame() {
   if (gameRunning) return;

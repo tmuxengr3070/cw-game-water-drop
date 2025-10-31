@@ -111,7 +111,7 @@ body {
 }
 
 .mode-dropdown-list { display: none; }
-.mode-dropdown-list.show { display: block; }
+.mode-dropdown-list { display: block; }
 
 
 .button-group {
