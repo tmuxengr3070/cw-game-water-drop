@@ -15,7 +15,7 @@ const modeBtn = document.getElementById("mode-btn");
 const modeDropdown = document.getElementById("mode-dropdown");
 modeBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  modeDropdown.classList.add("show");
+  modeDropdown.classList.toggle(".show");
 });
 document.querySelectorAll(".mode-option").forEach(opt => {
   opt.addEventListener("click", (e) => {
@@ -35,7 +35,7 @@ document.querySelectorAll(".mode-option").forEach(opt => {
       winScore = 27;
     }
     updateTimer();
-    modeDropdown.classList.remove("show");
+    modeDropdown.classList.remove(".show");
     modeBtn.textContent = `Mode (${mode.charAt(0).toUpperCase() + mode.slice(1)}) ▼`;
   });
 
