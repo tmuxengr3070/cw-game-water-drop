@@ -39,11 +39,6 @@ document.querySelectorAll(".mode-option").forEach(opt => {
     modeBtn.textContent = `Mode (${mode.charAt(0).toUpperCase() + mode.slice(1)}) ▼`;
   });
 
-
-
-
-  
-
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
 
